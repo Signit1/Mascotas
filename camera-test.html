@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfGlam - Test de Cámara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-black: #1a1a1a;
+            --primary-white: #ffffff;
+            --primary-gold: #d4af37;
+            --secondary-gold: #f4e4bc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--primary-black) 0%, #2a2a2a 100%);
+            color: var(--primary-white);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-gold);
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .success { background: rgba(76, 175, 80, 0.3); color: #4caf50; }
+        .error { background: rgba(244, 67, 54, 0.3); color: #f44336; }
+        .warning { background: rgba(255, 152, 0, 0.3); color: #ff9800; }
+        .info { background: rgba(33, 150, 243, 0.3); color: #2196f3; }
+        
+        .btn {
+            background: var(--primary-gold);
+            color: var(--primary-black);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--secondary-gold);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-white);
+            border: 2px solid var(--primary-gold);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-gold);
+            color: var(--primary-black);
+        }
+        
+        .video-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--primary-black);
+        }
+        
+        #video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-top: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .device-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .solution {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--primary-gold);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .solution h3 {
+            color: var(--primary-gold);
+            margin-bottom: 15px;
+        }
+        
+        .solution ol {
+            padding-left: 20px;
+        }
+        
+        .solution li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📷 Test de Cámara AfGlam</h1>
+        
+        <div class="test-section">
+            <h2>🔍 Información del Dispositivo</h2>
+            <div class="device-info" id="device-info">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Test de Cámara</h2>
+            <div id="camera-status">
+                <div class="status info">Haz clic en "Probar Cámara" para comenzar</div>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="btn" onclick="testCamera()">📷 Probar Cámara</button>
+                <button class="btn btn-secondary" onclick="stopCamera()">⏹️ Detener Cámara</button>
+            </div>
+            
+            <div class="video-container" id="video-container" style="display: none;">
+                <video id="video" autoplay muted playsinline></video>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Soluciones por Navegador</h2>
+            <div id="browser-solutions">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🚀 Acciones</h2>
+            <div style="text-align: center;">
+                <a href="/" class="btn">🏠 Ir a AfGlam Principal</a>
+                <a href="/test-compatibility.html" class="btn btn-secondary">🔍 Test Completo</a>
+                <a href="/brave-fix.html" class="btn btn-secondary">🔧 Solución Brave</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStream = null;
+        
+        // Información del dispositivo
+        function getDeviceInfo() {
+            const info = {
+                'Navegador': getBrowserInfo(),
+                'Versión': getBrowserVersion(),
+                'Plataforma': navigator.platform,
+                'User Agent': navigator.userAgent.substring(0, 100) + '...',
+                'WebRTC': isWebRTCSupported(),
+                'MediaDevices': 'mediaDevices' in navigator,
+                'GetUserMedia': 'getUserMedia' in navigator.mediaDevices,
+                'HTTPS': location.protocol === 'https:',
+                'Localhost': location.hostname === 'localhost'
+            };
+            
+            const deviceInfoDiv = document.getElementById('device-info');
+            deviceInfoDiv.innerHTML = '';
+            
+            Object.entries(info).forEach(([key, value]) => {
+                const item = document.createElement('div');
+                item.className = 'info-item';
+                item.innerHTML = `<strong>${key}:</strong> ${value}`;
+                deviceInfoDiv.appendChild(item);
+            });
+        }
+        
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            if (ua.includes('Chrome')) return 'Chrome';
+            if (ua.includes('Firefox')) return 'Firefox';
+            if (ua.includes('Safari')) return 'Safari';
+            if (ua.includes('Edge')) return 'Edge';
+            if (ua.includes('Brave')) return 'Brave';
+            return 'Desconocido';
+        }
+        
+        function getBrowserVersion() {
+            const ua = navigator.userAgent;
+            const match = ua.match(/(chrome|firefox|safari|edge|brave)\/(\d+)/i);
+            return match ? match[2] : 'Desconocida';
+        }
+        
+        function isWebRTCSupported() {
+            return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        }
+        
+        // Test de cámara
+        async function testCamera() {
+            const statusDiv = document.getElementById('camera-status');
+            const videoContainer = document.getElementById('video-container');
+            const video = document.getElementById('video');
+            
+            statusDiv.innerHTML = '<div class="status info">Solicitando acceso a cámara...</div>';
+            videoContainer.style.display = 'none';
+            
+            try {
+                // Detener stream anterior si existe
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                }
+                
+                // Solicitar cámara con diferentes configuraciones
+                const constraints = {
+                    video: {
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: 'environment' // Preferir cámara trasera en móvil
+                    },
+                    audio: false
+                };
+                
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                
+                // Mostrar video
+                video.srcObject = currentStream;
+                videoContainer.style.display = 'block';
+                
+                statusDiv.innerHTML = '<div class="status success">✅ Cámara funcionando correctamente</div>';
+                
+                // Mostrar información del stream
+                const track = currentStream.getVideoTracks()[0];
+                const settings = track.getSettings();
+                
+                const streamInfo = `
+                    <div class="status info">
+                        <strong>Información del stream:</strong><br>
+                        Resolución: ${settings.width}x${settings.height}<br>
+                        FPS: ${settings.frameRate || 'N/A'}<br>
+                        Dispositivo: ${track.label || 'Cámara'}
+                    </div>
+                `;
+                statusDiv.innerHTML += streamInfo;
+                
+            } catch (error) {
+                console.error('Error de cámara:', error);
+                handleCameraError(error);
+            }
+        }
+        
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+                currentStream = null;
+            }
+            
+            const video = document.getElementById('video');
+            video.srcObject = null;
+            
+            document.getElementById('video-container').style.display = 'none';
+            document.getElementById('camera-status').innerHTML = '<div class="status info">Cámara detenida</div>';
+        }
+        
+        function handleCameraError(error) {
+            const statusDiv = document.getElementById('camera-status');
+            let errorMessage = '';
+            let solution = '';
+            
+            switch (error.name) {
+                case 'NotAllowedError':
+                    errorMessage = 'Acceso a cámara denegado';
+                    solution = 'Has bloqueado el acceso a la cámara. Ve a la configuración de tu navegador y permite el acceso.';
+                    break;
+                    
+                case 'NotFoundError':
+                    errorMessage = 'No se encontró cámara';
+                    solution = 'Asegúrate de tener una cámara conectada y funcionando.';
+                    break;
+                    
+                case 'NotSupportedError':
+                    errorMessage = 'Navegador no compatible';
+                    solution = 'Tu navegador no soporta acceso a cámara. Usa Chrome, Safari o Firefox actualizado.';
+                    break;
+                    
+                case 'NotReadableError':
+                    errorMessage = 'Cámara en uso';
+                    solution = 'La cámara está siendo usada por otra aplicación. Cierra Zoom, Teams u otras apps.';
+                    break;
+                    
+                case 'OverconstrainedError':
+                    errorMessage = 'Configuración no soportada';
+                    solution = 'La cámara no soporta la configuración solicitada. Intenta con una resolución más baja.';
+                    break;
+                    
+                case 'SecurityError':
+                    errorMessage = 'Error de seguridad';
+                    solution = 'Asegúrate de estar en HTTPS o localhost.';
+                    break;
+                    
+                default:
+                    errorMessage = `Error: ${error.message}`;
+                    solution = 'Error desconocido. Intenta recargar la página.';
+            }
+            
+            statusDiv.innerHTML = `
+                <div class="status error">❌ ${errorMessage}</div>
+                <div class="solution">
+                    <h3>💡 Solución:</h3>
+                    <p>${solution}</p>
+                </div>
+            `;
+        }
+        
+        // Generar soluciones por navegador
+        function generateBrowserSolutions() {
+            const browser = getBrowserInfo();
+            const solutionsDiv = document.getElementById('browser-solutions');
+            
+            let solutions = '';
+            
+            switch (browser) {
+                case 'Brave':
+                    solutions = `
+                        <div class="solution">
+                            <h3>🔧 Solución para Brave Browser</h3>
+                            <ol>
+                                <li>Abre <strong>brave://settings/</strong></li>
+                                <li>Ve a "Privacy and security"</li>
+                                <li>Desactiva "Shields" temporalmente</li>
+                                <li>Ve a <strong>brave://settings/content/camera</strong></li>
+                                <li>Permite <code>localhost:3000</code></li>
+                                <li>Reinicia Brave</li>
+                            </ol>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Chrome':
+                    solutions = `
+                        <div class="solution">
+                            <h3>🔧 Solución para Chrome</h3>
+                            <ol>
+                                <li>Haz clic en el ícono de cámara en la barra de direcciones</li>
+                                <li>Selecciona "Allow" para la cámara</li>
+                                <li>Si no aparece, ve a Configuración > Privacidad y seguridad</li>
+                                <li>Busca "Permisos del sitio" > Cámara</li>
+                                <li>Añade <code>localhost:3000</code></li>
+                            </ol>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Safari':
+                    solutions = `
+                        <div class="solution">
+                            <h3>🔧 Solución para Safari</h3>
+                            <ol>
+                                <li>Ve a Safari > Preferencias</li>
+                                <li>Pestaña "Sitios web" > Cámara</li>
+                                <li>Permite <code>localhost:3000</code></li>
+                                <li>O selecciona "Permitir cuando se solicite"</li>
+                            </ol>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'Firefox':
+                    solutions = `
+                        <div class="solution">
+                            <h3>🔧 Solución para Firefox</h3>
+                            <ol>
+                                <li>Haz clic en el ícono de cámara en la barra de direcciones</li>
+                                <li>Selecciona "Permitir"</li>
+                                <li>O ve a about:preferences#privacy</li>
+                                <li>Busca "Permisos" > Cámara</li>
+                                <li>Configura los permisos</li>
+                            </ol>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    solutions = `
+                        <div class="solution">
+                            <h3>🔧 Solución General</h3>
+                            <ol>
+                                <li>Verifica que tu navegador esté actualizado</li>
+                                <li>Busca la configuración de permisos de cámara</li>
+                                <li>Permite el acceso para <code>localhost:3000</code></li>
+                                <li>Desactiva extensiones que puedan interferir</li>
+                                <li>Intenta con Chrome o Safari</li>
+                            </ol>
+                        </div>
+                    `;
+            }
+            
+            solutionsDiv.innerHTML = solutions;
+        }
+        
+        // Inicializar
+        window.onload = function() {
+            getDeviceInfo();
+            generateBrowserSolutions();
+        };
+        
+        // Limpiar al salir
+        window.onbeforeunload = function() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+        };
+    </script>
+</body>
+</html> 

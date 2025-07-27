@@ -201,20 +201,246 @@ class AfGlamApp {
             return;
         }
         
-        // Request camera permissions
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    console.log('Camera access granted');
-                    // AR scene will handle the stream
-                })
-                .catch(error => {
-                    console.error('Camera access denied:', error);
-                    this.showCameraError(error);
-                });
-        } else {
-            this.showCameraError(new Error('WebRTC not supported'));
+        // Show camera permission request UI
+        this.showCameraPermissionRequest();
+    }
+    
+    showCameraPermissionRequest() {
+        const arContainer = document.querySelector('.ar-container');
+        arContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; padding: 20px;">
+                <div style="max-width: 500px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📷</div>
+                    <h3>Permisos de Cámara Requeridos</h3>
+                    <p style="margin: 20px 0; line-height: 1.6;">
+                        Para disfrutar de la experiencia mágica de AfGlam, necesitamos acceso a tu cámara.
+                        <br><br>
+                        <strong>¿Qué haremos con tu cámara?</strong>
+                        <br>
+                        • Solo la usaremos para mostrar efectos AR en tu mascota
+                        <br>
+                        • No guardamos ni transmitimos videos
+                        <br>
+                        • Puedes revocar el permiso en cualquier momento
+                    </p>
+                    
+                    <div style="margin: 30px 0;">
+                        <button id="request-camera-btn" style="background: #d4af37; color: #1a1a1a; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin: 10px;">
+                            ✅ Permitir Acceso a Cámara
+                        </button>
+                        <br>
+                        <button id="deny-camera-btn" style="background: transparent; color: white; border: 2px solid #666; padding: 12px 25px; border-radius: 25px; font-size: 1rem; cursor: pointer; margin: 10px;">
+                            ❌ No Permitir
+                        </button>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <h4>💡 Consejos:</h4>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Asegúrate de que tu cámara no esté siendo usada por otras apps</li>
+                            <li>Si usas Brave, desactiva temporalmente los Shields</li>
+                            <li>Verifica que tu navegador esté actualizado</li>
+                        </ul>
+                    </div>
+                    
+                    <a href="/test-compatibility.html" style="color: #d4af37; text-decoration: none; font-size: 0.9rem;">
+                        🔍 ¿Tienes problemas? Haz el test de compatibilidad
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        // Add event listeners
+        document.getElementById('request-camera-btn').addEventListener('click', () => {
+            this.requestCameraPermission();
+        });
+        
+        document.getElementById('deny-camera-btn').addEventListener('click', () => {
+            this.showCameraDenied();
+        });
+    }
+    
+    async requestCameraPermission() {
+        const arContainer = document.querySelector('.ar-container');
+        
+        // Show loading state
+        arContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; padding: 20px;">
+                <div>
+                    <div style="font-size: 3rem; margin-bottom: 20px;">⏳</div>
+                    <h3>Solicitando Permisos...</h3>
+                    <p>Por favor, responde al diálogo de tu navegador.</p>
+                    <div style="margin: 20px 0;">
+                        <div style="width: 50px; height: 50px; border: 3px solid rgba(212, 175, 55, 0.3); border-top: 3px solid #d4af37; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        try {
+            // Request camera with specific constraints
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'environment' // Prefer rear camera on mobile
+                },
+                audio: false
+            });
+            
+            console.log('Camera access granted successfully');
+            
+            // Stop the stream immediately (A-Frame will request it again)
+            stream.getTracks().forEach(track => track.stop());
+            
+            // Show success and start AR
+            this.showCameraSuccess();
+            
+        } catch (error) {
+            console.error('Camera permission error:', error);
+            this.handleCameraError(error);
         }
+    }
+    
+    showCameraSuccess() {
+        const arContainer = document.querySelector('.ar-container');
+        arContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; padding: 20px;">
+                <div>
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+                    <h3>¡Permisos Otorgados!</h3>
+                    <p>Tu cámara está lista para la magia de AfGlam.</p>
+                    <div style="margin: 30px 0;">
+                        <button onclick="location.reload()" style="background: #d4af37; color: #1a1a1a; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">
+                            🚀 Iniciar Experiencia AR
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    showCameraDenied() {
+        const arContainer = document.querySelector('.ar-container');
+        arContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; padding: 20px;">
+                <div style="max-width: 500px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">😔</div>
+                    <h3>Permisos de Cámara Denegados</h3>
+                    <p style="margin: 20px 0; line-height: 1.6;">
+                        Sin acceso a la cámara no podemos mostrar los efectos mágicos de AfGlam.
+                        <br><br>
+                        Pero no te preocupes, puedes:
+                    </p>
+                    
+                    <div style="margin: 30px 0;">
+                        <a href="/demo.html" style="background: #d4af37; color: #1a1a1a; padding: 15px 30px; border-radius: 25px; text-decoration: none; display: inline-block; margin: 10px; font-weight: bold;">
+                            📱 Ver Demo del Código QR
+                        </a>
+                        <br>
+                        <button onclick="location.reload()" style="background: transparent; color: white; border: 2px solid #d4af37; padding: 12px 25px; border-radius: 25px; cursor: pointer; margin: 10px;">
+                            🔄 Intentar Nuevamente
+                        </button>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <h4>🔧 Para habilitar la cámara:</h4>
+                        <ol style="text-align: left; margin: 10px 0;">
+                            <li>Ve a la configuración de tu navegador</li>
+                            <li>Busca "Permisos de sitio" o "Camera"</li>
+                            <li>Permite el acceso para localhost:3000</li>
+                            <li>Recarga la página</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    handleCameraError(error) {
+        let errorMessage = 'Error desconocido al acceder a la cámara.';
+        let solutionMessage = '';
+        let showBraveFix = false;
+        
+        switch (error.name) {
+            case 'NotAllowedError':
+                errorMessage = 'Acceso a cámara denegado por el usuario.';
+                solutionMessage = 'Has bloqueado el acceso a la cámara. Puedes cambiar esto en la configuración de tu navegador.';
+                break;
+                
+            case 'NotFoundError':
+                errorMessage = 'No se encontró cámara en tu dispositivo.';
+                solutionMessage = 'Asegúrate de tener una cámara conectada y funcionando.';
+                break;
+                
+            case 'NotSupportedError':
+                errorMessage = 'Tu navegador no soporta acceso a cámara.';
+                solutionMessage = 'Usa Chrome, Safari o Firefox actualizado.';
+                break;
+                
+            case 'NotReadableError':
+                errorMessage = 'La cámara está siendo usada por otra aplicación.';
+                solutionMessage = 'Cierra otras apps que puedan estar usando la cámara (Zoom, Teams, etc.).';
+                break;
+                
+            case 'OverconstrainedError':
+                errorMessage = 'La cámara no cumple con los requisitos.';
+                solutionMessage = 'Intenta con una resolución más baja o usa otra cámara.';
+                break;
+                
+            case 'SecurityError':
+                errorMessage = 'Error de seguridad al acceder a la cámara.';
+                solutionMessage = 'Asegúrate de estar en HTTPS o localhost.';
+                showBraveFix = true;
+                break;
+                
+            default:
+                errorMessage = `Error: ${error.message}`;
+                solutionMessage = 'Intenta recargar la página o usar otro navegador.';
+                showBraveFix = true;
+        }
+        
+        const arContainer = document.querySelector('.ar-container');
+        let braveFixButton = '';
+        
+        if (showBraveFix) {
+            braveFixButton = `
+                <a href="/brave-fix.html" style="background: #ff9800; color: #1a1a1a; padding: 12px 20px; border-radius: 25px; text-decoration: none; display: inline-block; margin: 10px; font-weight: bold;">
+                    🔧 Solución para Brave Browser
+                </a>
+            `;
+        }
+        
+        arContainer.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; padding: 20px;">
+                <div style="max-width: 500px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">⚠️</div>
+                    <h3>${errorMessage}</h3>
+                    <p style="margin: 20px 0; line-height: 1.6;">${solutionMessage}</p>
+                    
+                    <div style="margin: 30px 0;">
+                        <button onclick="location.reload()" style="background: #d4af37; color: #1a1a1a; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin: 10px;">
+                            🔄 Reintentar
+                        </button>
+                        <br>
+                        ${braveFixButton}
+                        <a href="/test-compatibility.html" style="background: #2196f3; color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; display: inline-block; margin: 10px; font-weight: bold;">
+                            🔍 Test de Compatibilidad
+                        </a>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <h4>💡 Soluciones rápidas:</h4>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Recarga la página y permite la cámara</li>
+                            <li>Usa Chrome o Safari en lugar de Brave</li>
+                            <li>Verifica que no haya otras apps usando la cámara</li>
+                            <li>Desactiva extensiones de privacidad</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `;
     }
     
     checkBrowserCompatibility() {
