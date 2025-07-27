@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfGlam - Test de Compatibilidad</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .success { background: rgba(76, 175, 80, 0.3); color: #4caf50; }
+        .error { background: rgba(244, 67, 54, 0.3); color: #f44336; }
+        .warning { background: rgba(255, 152, 0, 0.3); color: #ff9800; }
+        .info { background: rgba(33, 150, 243, 0.3); color: #2196f3; }
+        
+        .solution {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid #d4af37;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .btn {
+            background: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #f4e4bc;
+            transform: translateY(-2px);
+        }
+        
+        .device-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test de Compatibilidad AfGlam</h1>
+        
+        <div class="test-section">
+            <h2>📱 Información del Dispositivo</h2>
+            <div class="device-info" id="device-info">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🌐 Navegador y WebAR</h2>
+            <div id="browser-tests">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📷 Cámara y Permisos</h2>
+            <div id="camera-tests">
+                <!-- Se llenará con JavaScript -->
+            </div>
+            <button class="btn" onclick="testCamera()">Probar Cámara</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 Soluciones Recomendadas</h2>
+            <div id="solutions">
+                <!-- Se llenará con JavaScript -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🚀 Acciones</h2>
+            <a href="/" class="btn">Ir a AfGlam Principal</a>
+            <a href="/demo.html" class="btn">Ver Demo QR</a>
+            <button class="btn" onclick="location.reload()">Actualizar Test</button>
+        </div>
+    </div>
+
+    <script>
+        // Información del dispositivo
+        function getDeviceInfo() {
+            const info = {
+                'User Agent': navigator.userAgent,
+                'Plataforma': navigator.platform,
+                'Navegador': getBrowserInfo(),
+                'Versión': getBrowserVersion(),
+                'WebGL': isWebGLSupported(),
+                'WebRTC': isWebRTCSupported(),
+                'Service Worker': 'serviceWorker' in navigator,
+                'Web Share API': 'share' in navigator,
+                'Touch Support': 'ontouchstart' in window,
+                'Orientación': window.screen.orientation ? window.screen.orientation.type : 'No disponible'
+            };
+            
+            const deviceInfoDiv = document.getElementById('device-info');
+            deviceInfoDiv.innerHTML = '';
+            
+            Object.entries(info).forEach(([key, value]) => {
+                const item = document.createElement('div');
+                item.className = 'info-item';
+                item.innerHTML = `<strong>${key}:</strong> ${value}`;
+                deviceInfoDiv.appendChild(item);
+            });
+        }
+        
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            if (ua.includes('Chrome')) return 'Chrome';
+            if (ua.includes('Firefox')) return 'Firefox';
+            if (ua.includes('Safari')) return 'Safari';
+            if (ua.includes('Edge')) return 'Edge';
+            if (ua.includes('Brave')) return 'Brave';
+            return 'Desconocido';
+        }
+        
+        function getBrowserVersion() {
+            const ua = navigator.userAgent;
+            const match = ua.match(/(chrome|firefox|safari|edge|brave)\/(\d+)/i);
+            return match ? match[2] : 'Desconocida';
+        }
+        
+        function isWebGLSupported() {
+            try {
+                const canvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && 
+                    (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        function isWebRTCSupported() {
+            return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        }
+        
+        // Tests de compatibilidad
+        function runBrowserTests() {
+            const tests = [
+                {
+                    name: 'WebGL Support',
+                    test: () => isWebGLSupported(),
+                    critical: true
+                },
+                {
+                    name: 'WebRTC Support',
+                    test: () => isWebRTCSupported(),
+                    critical: true
+                },
+                {
+                    name: 'HTTPS/SSL',
+                    test: () => location.protocol === 'https:' || location.hostname === 'localhost',
+                    critical: true
+                },
+                {
+                    name: 'A-Frame Support',
+                    test: () => typeof AFRAME !== 'undefined',
+                    critical: false
+                },
+                {
+                    name: 'MindAR Support',
+                    test: () => typeof MINDAR !== 'undefined',
+                    critical: false
+                }
+            ];
+            
+            const browserTestsDiv = document.getElementById('browser-tests');
+            browserTestsDiv.innerHTML = '';
+            
+            tests.forEach(test => {
+                const result = test.test();
+                const statusDiv = document.createElement('div');
+                statusDiv.className = `status ${result ? 'success' : (test.critical ? 'error' : 'warning')}`;
+                statusDiv.textContent = `${test.name}: ${result ? '✅ Compatible' : '❌ No compatible'}`;
+                browserTestsDiv.appendChild(statusDiv);
+            });
+        }
+        
+        // Test de cámara
+        async function testCamera() {
+            const cameraTestsDiv = document.getElementById('camera-tests');
+            cameraTestsDiv.innerHTML = '<div class="status info">Probando cámara...</div>';
+            
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    cameraTestsDiv.innerHTML = '<div class="status error">❌ WebRTC no soportado</div>';
+                    return;
+                }
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                cameraTestsDiv.innerHTML = '<div class="status success">✅ Cámara funcionando correctamente</div>';
+                stream.getTracks().forEach(track => track.stop());
+                
+            } catch (error) {
+                cameraTestsDiv.innerHTML = `<div class="status error">❌ Error de cámara: ${error.message}</div>`;
+            }
+        }
+        
+        // Generar soluciones
+        function generateSolutions() {
+            const solutions = [];
+            const ua = navigator.userAgent.toLowerCase();
+            
+            // Soluciones específicas para Brave
+            if (ua.includes('brave')) {
+                solutions.push({
+                    title: 'Configuración de Brave Browser',
+                    steps: [
+                        'Abre Brave Settings (brave://settings/)',
+                        'Ve a "Privacy and security"',
+                        'Desactiva "Shields" temporalmente para este sitio',
+                        'O añade este sitio a las excepciones',
+                        'Reinicia Brave y prueba nuevamente'
+                    ]
+                });
+            }
+            
+            // Soluciones generales
+            solutions.push({
+                title: 'Soluciones Generales',
+                steps: [
+                    'Usa Chrome o Safari en lugar de Brave',
+                    'Asegúrate de estar en HTTPS o localhost',
+                    'Permite acceso a la cámara cuando se solicite',
+                    'Actualiza tu navegador a la última versión',
+                    'Desactiva extensiones que puedan interferir'
+                ]
+            });
+            
+            // Soluciones para móvil
+            if ('ontouchstart' in window) {
+                solutions.push({
+                    title: 'Soluciones para Móvil',
+                    steps: [
+                        'Usa Chrome en Android',
+                        'Usa Safari en iOS',
+                        'Asegúrate de tener buena conexión a internet',
+                        'Cierra otras apps que usen la cámara',
+                        'Verifica que tienes suficiente espacio de almacenamiento'
+                    ]
+                });
+            }
+            
+            const solutionsDiv = document.getElementById('solutions');
+            solutionsDiv.innerHTML = '';
+            
+            solutions.forEach(solution => {
+                const solutionDiv = document.createElement('div');
+                solutionDiv.className = 'solution';
+                solutionDiv.innerHTML = `
+                    <h3>${solution.title}</h3>
+                    <ol>
+                        ${solution.steps.map(step => `<li>${step}</li>`).join('')}
+                    </ol>
+                `;
+                solutionsDiv.appendChild(solutionDiv);
+            });
+        }
+        
+        // Inicializar
+        window.onload = function() {
+            getDeviceInfo();
+            runBrowserTests();
+            generateSolutions();
+        };
+    </script>
+</body>
+</html> 

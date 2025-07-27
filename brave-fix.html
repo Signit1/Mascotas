@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfGlam - Solución para Brave Browser</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+        }
+        
+        .step-number {
+            background: #d4af37;
+            color: #1a1a1a;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .warning {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid #ff9800;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            background: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn:hover {
+            background: #f4e4bc;
+            transform: translateY(-2px);
+        }
+        
+        .screenshot {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .screenshot img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+        }
+        
+        .alternative {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid #2196f3;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Solución para Brave Browser</h1>
+        
+        <div class="warning">
+            <h3>⚠️ Problema Detectado</h3>
+            <p>Brave Browser tiene configuraciones de privacidad muy estrictas que pueden bloquear WebAR. Sigue estos pasos para solucionarlo:</p>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">1</span>Desactivar Shields Temporalmente</h3>
+            <p>Los Shields de Brave pueden bloquear el acceso a la cámara y WebRTC.</p>
+            <ol>
+                <li>Abre <strong>brave://settings/</strong> en tu navegador</li>
+                <li>Ve a la sección <strong>"Privacy and security"</strong></li>
+                <li>Busca <strong>"Shields"</strong> y desactívalo temporalmente</li>
+                <li>O añade <code>localhost:3000</code> a las excepciones</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">2</span>Configurar Permisos de Cámara</h3>
+            <p>Brave puede bloquear automáticamente el acceso a la cámara.</p>
+            <ol>
+                <li>Ve a <strong>brave://settings/content/camera</strong></li>
+                <li>Añade <code>localhost:3000</code> a los sitios permitidos</li>
+                <li>O cambia la configuración a <strong>"Ask before accessing"</strong></li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">3</span>Desactivar Extensiones</h3>
+            <p>Algunas extensiones pueden interferir con WebAR.</p>
+            <ol>
+                <li>Ve a <strong>brave://extensions/</strong></li>
+                <li>Desactiva temporalmente las extensiones de privacidad</li>
+                <li>Especialmente: uBlock Origin, Privacy Badger, etc.</li>
+                <li>Reinicia Brave después de los cambios</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">4</span>Verificar Configuración WebRTC</h3>
+            <p>Brave puede bloquear WebRTC por privacidad.</p>
+            <ol>
+                <li>Ve a <strong>brave://settings/content/webrtc</strong></li>
+                <li>Cambia la configuración a <strong>"Allow"</strong></li>
+                <li>O al menos a <strong>"Ask before accessing"</strong></li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3><span class="step-number">5</span>Probar la Experiencia</h3>
+            <p>Después de hacer los cambios, prueba AfGlam nuevamente.</p>
+            <ol>
+                <li>Recarga la página de AfGlam</li>
+                <li>Permite acceso a la cámara cuando se solicite</li>
+                <li>Si funciona, puedes reactivar Shields gradualmente</li>
+            </ol>
+        </div>
+        
+        <div class="alternative">
+            <h3>🔄 Alternativa: Usar Otro Navegador</h3>
+            <p>Si los pasos anteriores no funcionan, usa uno de estos navegadores que son más compatibles con WebAR:</p>
+            <ul>
+                <li><strong>Chrome</strong> - Mejor compatibilidad con WebAR</li>
+                <li><strong>Safari</strong> - Excelente en iOS y macOS</li>
+                <li><strong>Firefox</strong> - Buena compatibilidad general</li>
+            </ul>
+            <p>Estos navegadores tienen menos restricciones de privacidad y funcionan mejor con tecnologías WebAR.</p>
+        </div>
+        
+        <div class="success">
+            <h3>✅ Después de los Cambios</h3>
+            <p>Una vez que hayas configurado Brave correctamente:</p>
+            <ul>
+                <li>La experiencia AR debería funcionar sin problemas</li>
+                <li>Podrás ver los efectos mágicos en tu mascota</li>
+                <li>Podrás tomar fotos y compartirlas</li>
+                <li>La experiencia será fluida y sin interrupciones</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="/" class="btn">🚀 Probar AfGlam Ahora</a>
+            <a href="/test-compatibility.html" class="btn">🔍 Test de Compatibilidad</a>
+            <a href="/demo.html" class="btn">📱 Ver Demo QR</a>
+        </div>
+        
+        <div class="warning">
+            <h3>💡 Consejo de Seguridad</h3>
+            <p>Recuerda reactivar las protecciones de privacidad de Brave después de usar AfGlam, especialmente si vas a navegar por otros sitios web.</p>
+        </div>
+    </div>
+
+    <script>
+        // Detectar si el usuario está usando Brave
+        async function detectBrave() {
+            if (navigator.brave && await navigator.brave.isBrave()) {
+                console.log('Brave Browser detectado');
+                return true;
+            }
+            return false;
+        }
+        
+        // Mostrar mensaje personalizado
+        window.onload = async function() {
+            const isBrave = await detectBrave();
+            if (!isBrave) {
+                const container = document.querySelector('.container');
+                const warning = document.createElement('div');
+                warning.className = 'success';
+                warning.innerHTML = `
+                    <h3>ℹ️ Información</h3>
+                    <p>No estás usando Brave Browser. Esta página contiene instrucciones específicas para Brave. 
+                    Si tienes problemas con WebAR en otro navegador, visita el <a href="/test-compatibility.html" style="color: #d4af37;">test de compatibilidad</a>.</p>
+                `;
+                container.insertBefore(warning, container.firstChild);
+            }
+        };
+    </script>
+</body>
+</html> 

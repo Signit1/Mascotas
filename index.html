@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfGlam - Moda mágica para almas peludas</title>
+    <meta name="description" content="Descubre el lado más fantástico de tu mascota con AfGlam">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#d4af37">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AfGlam">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles/main.css">
+    
+    <!-- AR Libraries -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+    
+    <!-- Compatibility Check -->
+    <script>
+        // Detectar Brave Browser
+        const isBrave = navigator.brave && await navigator.brave.isBrave();
+        
+        // Mostrar advertencia si es Brave
+        if (isBrave) {
+            console.warn('Brave Browser detectado. WebAR puede requerir configuración adicional.');
+        }
+    </script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <h1 class="logo">AfGlam</h1>
+                <div class="logo-subtitle">Moda mágica para almas peludas</div>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Cargando experiencia mágica...</p>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="welcome-content">
+            <div class="brand-header">
+                <h1 class="brand-title">AfGlam</h1>
+                <p class="brand-subtitle">Moda mágica para almas peludas</p>
+            </div>
+            
+            <div class="welcome-text">
+                <p>Bienvenido a AfGlam – Moda mágica para almas peludas.</p>
+                <p>Activa la cámara y descubre su lado más fantástico.</p>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="start-ar-btn" class="btn btn-primary">
+                    <span class="btn-icon">✨</span>
+                    Activar Experiencia AR
+                </button>
+                <button id="qr-demo-btn" class="btn btn-secondary">
+                    <span class="btn-icon">📱</span>
+                    Ver QR Demo
+                </button>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🦋</span>
+                    <span>Alas de Mariposa</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">👼</span>
+                    <span>Alas de Ángel</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✨</span>
+                    <span>Efectos Mágicos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AR Experience Screen -->
+    <div id="ar-screen" class="screen">
+        <div class="ar-header">
+            <button id="back-btn" class="btn-back">← Volver</button>
+            <h2>Experiencia AfGlam AR</h2>
+            <button id="capture-btn" class="btn-capture">📸</button>
+        </div>
+        
+        <div class="ar-controls">
+            <div class="effect-selector">
+                <button class="effect-btn active" data-effect="butterfly">
+                    <span>🦋</span>
+                    Mariposa
+                </button>
+                <button class="effect-btn" data-effect="angel">
+                    <span>👼</span>
+                    Ángel
+                </button>
+                <button class="effect-btn" data-effect="sparkle">
+                    <span>✨</span>
+                    Mágico
+                </button>
+            </div>
+        </div>
+        
+        <div class="ar-container">
+            <a-scene
+                mindar-image="imageTargetSrc: /assets/targets.mind;"
+                color-space="sRGB"
+                renderer="colorManagement: true, physicallyCorrectLights"
+                vr-mode-ui="enabled: false"
+                device-orientation-permission-ui="enabled: false">
+                
+                <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+                
+                <a-assets>
+                    <a-asset-item id="butterflyWings" src="/assets/butterfly-wings.glb"></a-asset-item>
+                    <a-asset-item id="angelWings" src="/assets/angel-wings.glb"></a-asset-item>
+                    <a-asset-item id="sparkleEffect" src="/assets/sparkle-effect.glb"></a-asset-item>
+                </a-assets>
+                
+                <a-anchor position="0 0 0" scale="1 1 1" rotation="-90 0 0">
+                    <a-entity id="butterfly-wings" gltf-model="#butterflyWings" scale="0.5 0.5 0.5" position="0 0.5 0" visible="true"></a-entity>
+                    <a-entity id="angel-wings" gltf-model="#angelWings" scale="0.5 0.5 0.5" position="0 0.5 0" visible="false"></a-entity>
+                    <a-entity id="sparkle-effect" gltf-model="#sparkleEffect" scale="0.3 0.3 0.3" position="0 0.3 0" visible="false"></a-entity>
+                </a-anchor>
+            </a-scene>
+        </div>
+        
+        <div class="ar-instructions">
+            <p>Apunta la cámara hacia tu mascota para ver los efectos mágicos</p>
+        </div>
+    </div>
+
+    <!-- QR Demo Screen -->
+    <div id="qr-demo-screen" class="screen">
+        <div class="qr-demo-content">
+            <button id="qr-back-btn" class="btn-back">← Volver</button>
+            <h2>QR Code Demo</h2>
+            <div class="qr-container">
+                <div id="qr-code"></div>
+                <p>Escanea este código QR para acceder a la experiencia AfGlam</p>
+            </div>
+            <div class="qr-info">
+                <h3>¿Cómo funciona?</h3>
+                <ol>
+                    <li>Cada prenda AfGlam incluye un código QR único</li>
+                    <li>Escanea el código con tu dispositivo móvil</li>
+                    <li>Se abrirá automáticamente la experiencia AR</li>
+                    <li>¡Disfruta de la magia con tu mascota!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Capture Modal -->
+    <div id="capture-modal" class="modal">
+        <div class="modal-content">
+            <h3>¡Foto Capturada!</h3>
+            <div class="captured-image">
+                <canvas id="capture-canvas"></canvas>
+            </div>
+            <div class="modal-actions">
+                <button id="share-btn" class="btn btn-primary">Compartir</button>
+                <button id="download-btn" class="btn btn-secondary">Descargar</button>
+                <button id="close-modal-btn" class="btn btn-outline">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/ar-experience.js"></script>
+</body>
+</html> 

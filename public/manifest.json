@@ -1,0 +1,21 @@
+{
+  "name": "AfGlam - Moda mágica para almas peludas",
+  "short_name": "AfGlam",
+  "description": "Experiencia WebAR para ver a tu mascota con efectos mágicos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#d4af37",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "lifestyle", "utilities"],
+  "lang": "es",
+  "dir": "ltr"
+} 

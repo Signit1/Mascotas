@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfGlam Demo - QR Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-black: #1a1a1a;
+            --primary-white: #ffffff;
+            --primary-gold: #d4af37;
+            --secondary-gold: #f4e4bc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--primary-white) 0%, #f8e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .demo-container {
+            max-width: 600px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+        }
+        
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-black), var(--primary-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: var(--primary-black);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+        
+        .qr-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--primary-white);
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-text {
+            margin: 20px 0;
+            line-height: 1.6;
+            color: var(--primary-black);
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .feature {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-gold);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
+            color: var(--primary-black);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 class="brand-title">AfGlam</h1>
+        <p class="brand-subtitle">Moda mágica para almas peludas</p>
+        
+        <div class="demo-text">
+            <p>Esta es una demostración del código QR que se coserá en cada prenda AfGlam.</p>
+            <p>Al escanearlo desde un dispositivo móvil, se abrirá la experiencia WebAR completa.</p>
+        </div>
+        
+        <div class="qr-container">
+            <div id="qr-code"></div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">🦋</span>
+                <span>Alas de Mariposa</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">👼</span>
+                <span>Alas de Ángel</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">✨</span>
+                <span>Efectos Mágicos</span>
+            </div>
+        </div>
+        
+        <div class="demo-text">
+            <p><strong>Para probar la experiencia completa:</strong></p>
+            <p>1. Escanea este código QR con tu dispositivo móvil</p>
+            <p>2. Permite acceso a la cámara</p>
+            <p>3. ¡Disfruta de la magia con tu mascota!</p>
+        </div>
+        
+        <a href="/" class="btn">Ver Experiencia Completa</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // Generate QR code
+        const qrContainer = document.getElementById('qr-code');
+        const currentURL = window.location.origin;
+        
+        QRCode.toCanvas(qrContainer, currentURL, {
+            width: 200,
+            height: 200,
+            color: {
+                dark: '#1a1a1a',
+                light: '#ffffff'
+            },
+            margin: 2,
+            errorCorrectionLevel: 'H'
+        }, (error, canvas) => {
+            if (error) {
+                console.error('Error generating QR code:', error);
+                return;
+            }
+            
+            // Add AfGlam logo overlay
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const logoSize = 30;
+            
+            // Draw logo background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(centerX - logoSize/2, centerY - logoSize/2, logoSize, logoSize);
+            
+            // Draw AfGlam text
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = 'bold 12px Montserrat';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('AfGlam', centerX, centerY);
+        });
+    </script>
+</body>
+</html> 
